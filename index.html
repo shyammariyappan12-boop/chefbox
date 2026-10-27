@@ -77,7 +77,63 @@
       .footer{margin-top:5px}
     }
     @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
-  </style>
+/* Desktop Header Visibility Fix */
+.topbar {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    width: 100%;
+    min-height: 100px;
+    position: relative;
+    z-index: 1000;
+    flex-shrink: 0;
+}
+
+@media (min-width: 1051px) {
+    .topbar {
+        display: flex !important;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .brand,
+    .header-right,
+    .brand-copy,
+    .brand-icon {
+        display: flex;
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+}
+/* Desktop Footer Fix */
+@media (min-width: 1051px) {
+    body {
+        height: auto;
+        min-height: 100vh;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+
+    .page {
+        height: auto;
+        min-height: calc(100vh - 116px);
+        overflow: visible;
+    }
+
+    .layout {
+        flex: none;
+        min-height: 600px;
+    }
+
+    .footer {
+        display: flex;
+        visibility: visible;
+        opacity: 1;
+        flex-shrink: 0;
+    }
+}
+</style>
 </head>
 <body>
   <header class="topbar">
