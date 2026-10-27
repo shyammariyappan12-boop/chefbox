@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Food Recipe Showcase</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+    :root{--orange:#c9632d;--orange-dark:#9e431f;--cream:#fffaf1;--ink:#24201d;--muted:#71675f;--line:#ead7c5;--soft:#fff2e4;--shadow:0 12px 30px rgba(89,45,17,.12)}
+    *{box-sizing:border-box}
+    html{scroll-behavior:auto}
+    body{margin:0;height:100vh;overflow:hidden;font-family:Roboto,Arial,sans-serif;color:var(--ink);background:linear-gradient(135deg,#f7e2c8,#f8c49b 48%,#e99a63);}
+    .topbar{position:relative;z-index:10;min-height:100px;display:flex;align-items:center;justify-content:space-between;gap:18px;padding:16px clamp(18px,4vw,56px);background:linear-gradient(115deg,#55220f 0%,#9e431f 48%,#d8753b 100%);border-bottom:5px solid #f6c27b;box-shadow:0 8px 24px rgba(65,27,10,.25);color:#fff}
+    .brand{display:flex;align-items:center;gap:13px;font-size:clamp(20px,2vw,28px);font-weight:800;letter-spacing:-.6px;color:#fff}.brand-icon{display:grid;place-items:center;width:52px;height:52px;border-radius:16px;background:#fff4e5;color:#9e431f;box-shadow:0 6px 14px #3c180b50}.brand-icon i{font-size:24px}.brand-copy{display:flex;flex-direction:column;gap:5px}.brand-subtitle{font-size:11px;font-weight:500;letter-spacing:.7px;color:#ffe3c4}.header-right{display:flex;align-items:center;gap:12px;padding:8px 10px 8px 14px;border:1px solid #ffffff50;border-radius:14px;background:#55220f55}.select-label{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:#ffe5c7}
+    .dish-select{min-width:220px;max-width:100%;padding:12px 15px;border:1px solid #d4a17c;border-radius:12px;background:#fffdf9;color:#2a211b;font:600 15px Roboto,Arial,sans-serif;box-shadow:0 3px 10px #8d4b2512;outline-color:var(--orange)}
+    .page{width:min(1700px,100%);height:calc(100vh - 116px);margin:0 auto;padding:12px clamp(12px,2vw,28px) 8px;display:flex;flex-direction:column;overflow:hidden}
+    .layout{display:grid;grid-template-columns:minmax(230px,.9fr) minmax(330px,1.45fr) minmax(260px,.95fr);gap:14px;align-items:stretch;flex:1;min-height:0}
+    .card{min-width:0;min-height:0;overflow:hidden;background:rgba(255,253,248,.97);border:1px solid rgba(198,125,76,.48);border-radius:18px;padding:15px;box-shadow:var(--shadow)}
+    .card-heading{display:flex;align-items:center;justify-content:space-between;gap:8px;padding-bottom:9px;margin-bottom:9px;border-bottom:1px solid var(--line)}
+    h2,h3,p{margin-top:0}.card-heading h2{font-size:20px;line-height:1.2;margin:0;font-weight:800;letter-spacing:-.5px}.count{white-space:nowrap;border-radius:99px;background:#ffead8;color:#99461f;font-size:12px;font-weight:800;padding:6px 10px}
+    .ingredient-scroll{flex:1;min-height:0;overflow:hidden;padding:0 2px 2px 0;scrollbar-width:thin;scrollbar-color:#d89b70 #fff1e4}
+    .group-title{font-size:11px;text-transform:uppercase;letter-spacing:.8px;color:var(--orange-dark);font-weight:800;margin:9px 0 5px}.group-title:first-child{margin-top:0}
+    .ingredients-list{list-style:none;padding:0;margin:0;display:grid;gap:3px}
+    .ingredient-item{display:flex;align-items:flex-start;gap:11px;padding:4px 7px;background:#fffaf4;border:1px solid #f0dfcf;border-radius:11px;line-height:1.18;font-size:11px;transition:background .18s,border-color .18s}
+    .ingredient-item:hover{background:#fff2e5;border-color:#e7b58e}.ingredient-item input{width:13px;height:13px;flex:0 0 13px;margin:0;accent-color:var(--orange);cursor:pointer}.ingredient-item label{cursor:pointer;overflow-wrap:anywhere}.ingredient-item input:checked+label{color:#93877c;text-decoration:line-through}
+    .center-card{display:flex;flex-direction:column;gap:12px}
+    .hero-image{position:relative;overflow:hidden;border-radius:14px;background:#f0dfd0;aspect-ratio:1.55/1;min-height:0;flex:1;max-height:56%;border:1px solid #e7d1be}
+    .hero-image img{display:block;width:100%;height:100%;object-fit:cover;position:absolute;inset:0;transition:opacity .2s}
+    .category{position:absolute;top:14px;left:14px;padding:8px 12px;background:rgba(255,252,246,.94);border:1px solid #fff;border-radius:999px;font-size:12px;font-weight:800;color:#9c4a24;box-shadow:0 4px 12px #3d1c1017}
+    .dish-info{padding:0 2px}.dish-info h2{font-size:clamp(20px,2vw,28px);line-height:1.1;letter-spacing:-.8px;margin:0 0 9px}.dish-info p{font-size:12px;color:var(--muted);line-height:1.4;margin:0}
+    .stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin-top:auto;padding-top:10px;border-top:1px solid var(--line)}
+    .stat{display:flex;align-items:center;gap:11px;padding:8px 7px;border-radius:10px;background:#fff3e7;border:1px solid #f0dcc8;min-width:0}.stat i{font-size:16px;color:var(--orange);flex-shrink:0}.stat-label{font-size:10px;color:var(--muted);margin-bottom:4px}.stat-value{font-size:12px;font-weight:800;overflow-wrap:anywhere}
+    .instructions-card{display:flex;flex-direction:column;min-height:0}.instructions-intro{font-size:11px;line-height:1.35;color:var(--muted);margin:-2px 0 8px}.instruction-scroll{flex:1;min-height:0;overflow:hidden;padding:0 2px 2px 0;scrollbar-width:thin;scrollbar-color:#d89b70 #fff1e4}
+    .step-list{list-style:none;padding:0;margin:0;display:grid;gap:7px}.step{padding:7px 8px 8px;border:1px solid #f0decd;border-left:4px solid var(--orange);border-radius:13px;background:linear-gradient(120deg,#fffaf4,#fff4e8)}
+    .step-top{display:flex;align-items:flex-start;gap:7px;margin-bottom:3px}.step-number{display:grid;place-items:center;flex:0 0 22px;width:22px;height:22px;border-radius:7px;background:var(--orange);color:white;font-size:10px;font-weight:800}.step h3{font-size:12px;line-height:1.35;margin:3px 0 0;font-weight:800}.step p{font-size:10.5px;line-height:1.35;color:#4d443d;margin:0;overflow-wrap:anywhere}
+    .tip{margin-top:8px;padding:8px;border-radius:13px;background:#fff1df;border:1px dashed #dfa77d;font-size:10px;line-height:1.35;color:#75401f}.tip i{margin-right:7px;color:var(--orange)}
+    .footer{display:flex;align-items:center;justify-content:space-between;gap:12px;color:#fff1df;font-size:11px;margin:8px 0 0;padding:13px 18px;background:linear-gradient(110deg,#55220f,#9e431f);border-top:4px solid #f6c27b;border-radius:14px 14px 0 0;box-shadow:0 -4px 14px rgba(89,45,17,.10);flex-shrink:0}.footer strong{color:#ffd28c}.footer-note{display:flex;align-items:center;gap:7px}.footer-note i{color:#ffd28c}
+    ::-webkit-scrollbar{width:9px}::-webkit-scrollbar-track{background:#fff1e4;border-radius:10px}::-webkit-scrollbar-thumb{background:#d89b70;border-radius:10px;border:2px solid #fff1e4}
+    @media(max-width:1050px){body{height:auto;min-height:100vh;overflow:auto}.topbar{height:auto;min-height:78px}.page{height:auto;min-height:calc(100vh - 126px);overflow:visible}.layout{grid-template-columns:minmax(220px,.9fr) minmax(300px,1.2fr);flex:none}.instructions-card{grid-column:1/-1;min-height:0}.instruction-scroll{overflow:visible}.ingredient-scroll{overflow:visible}.hero-image{min-height:220px;flex:none;max-height:none}}
+    @media(max-width:680px){.topbar{align-items:stretch;flex-direction:column;padding:14px 16px;gap:13px}.brand{font-size:21px}.brand-icon{width:42px;height:42px}.header-right{align-items:flex-start;flex-direction:column;gap:6px}.dish-select{width:100%;min-width:0}.footer{align-items:flex-start;flex-direction:column;gap:7px;padding:12px 5px}.page{padding:14px 12px 22px}.layout{grid-template-columns:1fr;gap:13px}.card{padding:16px;border-radius:16px}.ingredient-scroll{max-height:none}.hero-image{min-height:210px;aspect-ratio:1.25/1}.instructions-card{grid-column:auto}.stats{gap:8px}.stat{align-items:flex-start;flex-direction:column;padding:10px 8px;gap:6px}.stat-value{font-size:12px}.card-heading h2{font-size:20px}}
+    /* Shared recipe layout: the same spacing and card design applies to every dish. */
+    .ingredient-scroll,.instruction-scroll{overscroll-behavior:contain}
+    .ingredients-list{gap:3px}
+    .group-title{margin:8px 0 4px}
+    .step-list{gap:6px}
+    /* Fit the complete recipe on a typical laptop screen without inner scrollbars. */
+    @media (min-width:1051px) and (max-height:820px){
+      .page{padding-top:10px;padding-bottom:7px}
+      .layout{gap:11px}
+      .card{padding:12px;border-radius:16px}
+      .card-heading{padding-bottom:7px;margin-bottom:7px}
+      .card-heading h2{font-size:18px}
+      .ingredient-item{font-size:10px;line-height:1.12;padding:3px 6px;gap:8px;border-radius:8px}
+      .ingredient-item input{width:12px;height:12px;flex-basis:12px}
+      .group-title{font-size:10px;margin:6px 0 3px}
+      .ingredients-list{gap:2px}
+      .center-card{gap:9px}
+      .hero-image{max-height:48%}
+      .dish-info h2{font-size:22px;margin-bottom:6px}
+      .dish-info p{font-size:11px;line-height:1.3}
+      .stats{padding-top:7px;gap:5px}
+      .stat{padding:6px 5px;gap:7px}
+      .stat i{font-size:14px}
+      .stat-label{font-size:9px;margin-bottom:2px}
+      .stat-value{font-size:11px}
+      .instructions-intro{font-size:10px;margin-bottom:5px}
+      .step-list{gap:4px}
+      .step{padding:5px 6px 6px;border-radius:10px}
+      .step-top{gap:6px;margin-bottom:2px}
+      .step-number{width:19px;height:19px;flex-basis:19px;font-size:9px;border-radius:6px}
+      .step h3{font-size:11px;line-height:1.2;margin-top:2px}
+      .step p{font-size:9.5px;line-height:1.22}
+      .tip{margin-top:5px;padding:6px;font-size:9px}
+      .footer{margin-top:5px}
+    }
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><span class="brand-icon"><i class="fa-solid fa-utensils" aria-hidden="true"></i></span><span class="brand-copy"><span>Food Recipe Showcase</span><span class="brand-subtitle">YOUR KITCHEN GUIDE · Simple ingredients, delicious results</span></span></div>
+    <div class="header-right"><label for="dishSelect" class="select-label">Choose a dish</label>
+    <select id="dishSelect" class="dish-select" aria-label="Choose a recipe" onchange="changeDish()">
+      <option value="biryani">Dish: Chicken Biryani</option>
+      <option value="paneer">Dish: Paneer Butter Masala</option>
+      <option value="pizza">Dish: Classic Italian Pizza</option>
+    </select></div>
+  </header>
+
+  <main class="page">
+    <div class="layout">
+      <section class="card" aria-labelledby="ingredientsHeading">
+        <div class="card-heading"><h2 id="ingredientsHeading"><i class="fa-solid fa-list-check" style="color:var(--orange);margin-right:8px"></i>Ingredients</h2><span id="ingredientCount" class="count"></span></div>
+        <div class="ingredient-scroll" id="ingredientsScroll">
+          <div id="ingredientsList"></div>
+        </div>
+      </section>
+
+      <section class="card center-card" aria-labelledby="dishTitle">
+        <div class="hero-image">
+          <img id="dishImage" src="" alt="" />
+          <span id="dishCategory" class="category"></span>
+        </div>
+        <div class="dish-info">
+          <h2 id="dishTitle"></h2>
+          <p id="dishDescription">Aromatic basmati rice cooked with tender chicken and authentic spices.</p>
+        </div>
+        <div class="stats">
+          <div class="stat"><i class="fa-regular fa-clock" aria-hidden="true"></i><div><div class="stat-label">Prep Time</div><div id="prepTime" class="stat-value"></div></div></div>
+          <div class="stat"><i class="fa-solid fa-fire-burner" aria-hidden="true"></i><div><div class="stat-label">Cook Time</div><div id="cookTime" class="stat-value"></div></div></div>
+          <div class="stat"><i class="fa-solid fa-user-group" aria-hidden="true"></i><div><div class="stat-label">Servings</div><div id="servings" class="stat-value"></div></div></div>
+        </div>
+      </section>
+
+      <section class="card instructions-card" aria-labelledby="instructionsHeading">
+        <div class="card-heading"><h2 id="instructionsHeading"><i class="fa-solid fa-book-open" style="color:var(--orange);margin-right:8px"></i>Instructions</h2></div>
+        <p class="instructions-intro">Follow each step in order. The same layout is used for every dish.</p>
+        <div class="instruction-scroll" id="instructionsScroll" tabindex="0" aria-label="Scrollable recipe instructions">
+          <ol id="instructionsList" class="step-list"></ol>
+          <div class="tip"><i class="fa-regular fa-lightbulb" aria-hidden="true"></i><strong>Chef's tip:</strong> Prepare and measure all ingredients before you start cooking.</div>
+        </div>
+      </section>
+    </div>
+    <footer class="footer"><span class="footer-note"><i class="fa-regular fa-circle-check" aria-hidden="true"></i> Tick ingredients as you prepare them</span><span>Made with <strong>♥</strong> for every home chef</span><span>© <span id="yearNow">2026</span> Food Recipe Showcase · Cook something wonderful today</span></footer>
+  </main>
+
+  <script>
+    const recipes = {
+      biryani: {
+        title: "Chicken Biryani", category: "South Indian · Mughal",
+        description: "Aromatic basmati rice layered with tender chicken, fresh herbs and authentic biryani spices.",
+        prepTime: "25 mins", cookTime: "40 mins", servings: "4 people",
+        image: "https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=1200&q=85", imageAlt: "Chicken biryani served in a bowl",
+        groups: [
+          {title:"Chicken marinade",items:["500 g chicken pieces","1 cup curd / yogurt","2 tbsp ginger-garlic paste","1 tbsp red chilli powder","½ tsp turmeric powder","Salt to taste"]},
+          {title:"Rice",items:["2 cups basmati rice","Water, as needed","Salt to taste","2 cardamom pods","3 cloves","1 small cinnamon stick","1 bay leaf"]},
+          {title:"Gravy",items:["3 tbsp ghee or oil","2 large onions, sliced","2 tomatoes, chopped","Fresh mint and coriander, chopped","Cinnamon, cloves and cardamom","1 tsp biryani masala","1 tsp garam masala"]},
+          {title:"Layering & garnish",items:["Saffron soaked in warm milk (optional)","Fried onions (birista)","Fresh coriander and mint"]}
+        ],
+        instructions:[
+          {title:"Marinate the chicken",text:"Wash and clean the chicken. In a large bowl, combine yogurt, ginger-garlic paste, chilli powder, turmeric and salt. Mix well, coat the chicken and marinate for at least 30 minutes."},
+          {title:"Prepare the rice",text:"Rinse and soak the basmati rice for 20 minutes. Boil water with salt, cardamom, cloves, cinnamon and bay leaf. Cook the rice until it is about 70% done, then drain."},
+          {title:"Cook the biryani gravy",text:"Heat ghee or oil in a heavy pot. Fry the sliced onions until golden. Add tomatoes, mint, coriander and masala powders. Add the marinated chicken and cook until nearly tender."},
+          {title:"Layer the biryani",text:"Spread the chicken gravy evenly in the pot. Add the partly cooked rice on top. Finish with mint, coriander, fried onions and saffron milk, if using."},
+          {title:"Dum cook",text:"Cover the pot tightly. Cook on low heat for 15–20 minutes, until the rice is tender and the chicken is fully cooked. Let it rest for 5 minutes before opening."},
+          {title:"Serve",text:"Gently fluff the rice without breaking the grains. Serve hot with onion raita, boiled egg or your favourite side dish."}
+        ]
+      },
+      paneer: {
+        title:"Paneer Butter Masala", category:"North Indian · Vegetarian",
+        description:"Soft paneer cubes in a rich, creamy tomato-cashew gravy with warming Indian spices.",
+        prepTime:"15 mins",cookTime:"20 mins",servings:"3 people",
+        image:"https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=1200&q=85",imageAlt:"Paneer butter masala in a serving bowl",
+        groups:[
+          {title:"Main ingredients",items:["250 g paneer cubes","3 tomatoes, pureed","1 onion, finely chopped","10 cashews, soaked","2 tbsp butter and 1 tbsp oil","1 tbsp ginger-garlic paste"]},
+          {title:"Spices & finish",items:["1 tsp chilli powder","1 tsp garam masala","½ tsp cumin powder","Salt to taste","2 tbsp fresh cream","Kasuri methi","Fresh coriander"]}
+        ],
+        instructions:[
+          {title:"Prepare the cashew paste",text:"Soak cashews in warm water for 10 minutes, then blend into a smooth paste with a little water."},
+          {title:"Sauté the aromatics",text:"Heat butter and oil in a pan. Add chopped onion and cook until soft and lightly golden. Add ginger-garlic paste and sauté until fragrant."},
+          {title:"Cook the tomato gravy",text:"Add tomato puree and cook until it thickens and the raw smell disappears. Stir in chilli powder, cumin powder, garam masala and salt."},
+          {title:"Make it creamy",text:"Mix in the cashew paste and a little water. Simmer gently for 4–5 minutes, stirring so the gravy does not stick."},
+          {title:"Add paneer",text:"Add paneer cubes and simmer for another 3–5 minutes. Stir in fresh cream and crushed kasuri methi."},
+          {title:"Serve",text:"Garnish with coriander and a small swirl of cream. Serve hot with naan, roti or rice."}
+        ]
+      },
+      pizza: {
+        title:"Classic Italian Pizza", category:"Italian · Vegetarian option",
+        description:"A crisp pizza base topped with tomato sauce, melted mozzarella and fresh toppings.",
+        prepTime:"20 mins",cookTime:"15 mins",servings:"2–3 people",
+        image:"https://images.unsplash.com/photo-1513104890138-7c749659a591?w=1200&q=85",imageAlt:"Freshly baked pizza with cheese and toppings",
+        groups:[
+          {title:"Pizza base",items:["1 prepared pizza dough or base","½ cup pizza sauce","1½ cups mozzarella cheese","1 tbsp olive oil"]},
+          {title:"Toppings",items:["Sliced capsicum","Sliced onion","Olives or sweet corn (optional)","Dried oregano","Chilli flakes, to taste"]}
+        ],
+        instructions:[
+          {title:"Preheat the oven",text:"Preheat the oven to 220°C. If using a tawa, warm it over low heat and keep a lid ready."},
+          {title:"Prepare the base",text:"Place the pizza base on a tray. Spread the pizza sauce evenly, leaving a small border around the edge."},
+          {title:"Add toppings",text:"Sprinkle mozzarella over the sauce. Arrange capsicum, onion and any other toppings evenly. Brush the crust lightly with olive oil."},
+          {title:"Bake the pizza",text:"Bake for 12–15 minutes, or until the cheese melts and the crust turns golden. Cooking time may vary by oven."},
+          {title:"Season",text:"Remove carefully and sprinkle with oregano and chilli flakes to taste."},
+          {title:"Slice and serve",text:"Let the pizza rest for 2 minutes, slice and serve while hot."}
+        ]
+      }
+    };
+
+    // All recipe content is populated through JavaScript using the HTML element IDs.
+    function renderRecipe(key) {
+      const data = recipes[key];
+      if (!data) return;
+      document.getElementById('dishTitle').textContent = data.title;
+      document.getElementById('dishCategory').textContent = data.category;
+      document.getElementById('dishDescription').textContent = data.description;
+      const image = document.getElementById('dishImage');
+      image.src = data.image;
+      image.alt = data.imageAlt;
+      image.loading = 'eager';
+      document.getElementById('prepTime').textContent = data.prepTime;
+      document.getElementById('cookTime').textContent = data.cookTime;
+      document.getElementById('servings').textContent = data.servings;
+
+      const ingredients = document.getElementById('ingredientsList');
+      ingredients.replaceChildren();
+      let count = 0;
+      data.groups.forEach((group, groupIndex) => {
+        const heading = document.createElement('h3');
+        heading.className = 'group-title';
+        heading.textContent = group.title;
+        ingredients.appendChild(heading);
+        const list = document.createElement('ul');
+        list.className = 'ingredients-list';
+        group.items.forEach((item, itemIndex) => {
+          count++;
+          const li = document.createElement('li');
+          li.className = 'ingredient-item';
+          const checkbox = document.createElement('input');
+          checkbox.type = 'checkbox';
+          checkbox.id = `ingredient-${groupIndex}-${itemIndex}`;
+          const label = document.createElement('label');
+          label.htmlFor = checkbox.id;
+          label.textContent = item;
+          li.append(checkbox, label);
+          list.appendChild(li);
+        });
+        ingredients.appendChild(list);
+      });
+      document.getElementById('ingredientCount').textContent = `${count} items`;
+
+      const instructionList = document.getElementById('instructionsList');
+      instructionList.replaceChildren();
+      data.instructions.forEach((instruction, index) => {
+        const li = document.createElement('li');
+        li.className = 'step';
+        const top = document.createElement('div');
+        top.className = 'step-top';
+        const number = document.createElement('span');
+        number.className = 'step-number';
+        number.textContent = String(index + 1).padStart(2, '0');
+        const title = document.createElement('h3');
+        title.textContent = instruction.title;
+        const text = document.createElement('p');
+        text.textContent = instruction.text;
+        top.append(number, title);
+        li.append(top, text);
+        instructionList.appendChild(li);
+      });
+      document.getElementById('ingredientsScroll').scrollTop = 0;
+      document.getElementById('instructionsScroll').scrollTop = 0;
+    }
+    function changeDish(){ renderRecipe(document.getElementById('dishSelect').value); }
+    document.getElementById('yearNow').textContent = new Date().getFullYear();
+    renderRecipe('biryani');
+  </script>
+</body>
+</html>
